@@ -2,6 +2,11 @@ import React from "react";
 
 import "./sign-in.styles.scss";
 
+import FormInput from "../form-input/form-input.component";
+import CustomButton from "../custom-button/custom-button.component";
+
+import { signInWithGoogle } from "../../firebase/firebase.utils";
+
 class SignIn extends React.Component {
   constructor(props) {
     super(props);
@@ -12,10 +17,20 @@ class SignIn extends React.Component {
     };
   }
 
+  handleSubmit = event => {
+    event.preventDefault();
+    this.setState({email:'', password: ''});
+  };
+
   handleChange = event => {
     const { value, name } = event.target;
 
     this.setState({ [name]: value });
+  };
+
+  handleSignIn = event => {
+    event.preventDefault();
+    signInWithGoogle();
   };
 
   render() {
@@ -25,24 +40,29 @@ class SignIn extends React.Component {
         <span>Sign in with your email and password</span>
 
         <form onSubmit={this.handleSubmit}>
-          <input
-            name="email"
-            type="email"
-            onChange={this.handleChange}
+          <FormInput
+            name='email'
+            type='email'
+            handleChange={this.handleChange}
             value={this.state.email}
+            label="email"
             required
           />
-          <label>Email</label>
-          <input
-            name="password"
-            type="password"
-            value={this.state.password}
-            onChange={this.handleChange}
-            required
-          />
-          <label>Password</label>
 
-          <input type="submit" value="Submit Form" />
+          <FormInput
+            name='password'
+            type='password'
+            value={this.state.password}
+            handleChange={this.handleChange}
+            label="password"
+            required
+          />
+          <div className='buttons'>
+          <CustomButton type='submit'>Sign In</CustomButton>
+          <CustomButton onClick={this.handleSignIn} isGoogleSignIn>
+            Sign In with Google
+          </CustomButton>
+          </div>
         </form>
       </div>
     );
